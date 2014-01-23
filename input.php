@@ -1,22 +1,18 @@
 <?php
 
-class K_input {
+class K_input extends Kelements {
 	
-	var $type = "text";
-	var $name;
-	var $html;
-	
-	public function __construct($name,$type) {
-		$this->type = $type;
-		$this->name = $name;
-	}
-	
-	function set_attribute($name,$value) {
-		$this->$name = $value;
-	}
-	
+		
 	function html() {
-		return "<input type='".$this->type."' name='".$this->name."'>";
+		$out = "";
+		if($this->label_position == "before") 
+			$out .= empty($this->label)?"":$this->label;
+		$out .= "<input";
+		$out .= write_attributes($this->attributes);
+		$out .= ">";
+		if($this->label_position == "after") 
+			$out .= empty($this->label)?"":$this->label;
+		return $out;
 	}
 	
 }

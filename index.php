@@ -1,10 +1,23 @@
 <?php
 
-include_once 'konform.php';
+include_once 'formkons.php';
 
-$form = new Konform();
+$form = new Formkons(array("method"=>"post"));
 
-$submit = $form->add_element("input", "Submit", "submit");
 
-echo $form->html();
+$name = $form->add_element("input", "name", array("type"=>"text"));
+$name->set_label("Name");
+$name->set_validation(array('required'));
 
+$submit = $form->add_element("input", "submit", array("type"=>"submit"));
+
+
+if($form->submitted) {
+	echo "Form was submitted\n";
+	var_dump($_POST);
+}
+else {
+	
+	echo $form->html();
+	//include_once 'form_view.php';
+}
