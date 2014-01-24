@@ -4,14 +4,17 @@
 
 class Validation {
 	
+	var $id;
 	var $msg;
 	
-	public function __construct() {
+	public function __construct($id) {
+		$this->id = $id;
 		include 'messages.php';
 		$this->msg = $msg;
 	}
 	
-	function required($value) {
+	function required() {
+		echo "Validating ... ".$this->id;
 		if(empty($value)) return $this->set_error('required');
 		else return false;
 	}

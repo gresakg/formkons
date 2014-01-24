@@ -11,8 +11,7 @@ class Kelements {
 	
 	var $value = NULL;
 	var $attributes = array();
-	var $validation;
-	var $filters;
+	var $validation =array();
 	var $error = array();
 	var $html;
 	
@@ -49,11 +48,12 @@ class Kelements {
 	}
 	
 	public function set_validation($methods) {
-		$this->validation = $methods;
+		$this->validation = array_merge($this->validation,$methods);
 	}
 	
+	// just an alias
 	public function set_filters($methods) {
-		$this->filters($methods);
+		$this->set_validation($methods);
 	}
 	
 	/**

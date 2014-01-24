@@ -5,10 +5,11 @@ include_once 'kelements.php';
 
 class Formkons {
 	
-	var $submitted = false;
+	
 	var $method;
 	var $attributes = array();
 	var $elements;
+	private $submitted = false;
 	
 	function __construct($config=false) {
 		if(is_array($config)) {
@@ -19,7 +20,7 @@ class Formkons {
 		$this->submitted = $this->is_submitted($this->method);
 		
 	}
-	
+		
 	function add_attribute($name, $value) {
 		$this->attributes[$name] = $value;
 	}
@@ -45,10 +46,25 @@ class Formkons {
 		$classname = "K_".$element;
 		
 		$this->elements[$id] = new $classname($id,$attr);
-		if($this->submitted) 
-			$this->elements[$id]->value = $this->get_value($id);
+		
+		// this will not work because validation is not yet defined
+		// we need a public method submitted() that will run this after the elements are defined
+		//if($this->submitted) 
+		//	$this->elements[$id]->value = $this->get_value($id);
 		
 		return $this->elements[$id];
+	}
+	
+	public function submitted_and_valid() {
+		if($this->submitted) {
+			foreach($this->elements as $id => $element) {
+				$this->get_value($id);
+			}
+		}
+		else {
+			return false;
+		}
+		
 	}
 	
 	public function html() {
@@ -65,7 +81,6 @@ class Formkons {
 			
 	}
 	
-	
 	/**
 	 * Create the opening FORM tag with all attributes
 	 */
@@ -80,18 +95,42 @@ class Formkons {
 		return "</form>";
 	}
 	
-	function is_submitted($method) {
+	/**
+	 * This dunction is private and used by the constructor that needs(?) to know
+	 * if the form is submitted in advance. Do not mix with public function submitted()
+	 * that actually runs all the validation and value abstraction processes.
+	 * @param type $method
+	 * @return boolean
+	 */
+	private function is_submitted($method) {
 		if($method=="post" && (!empty($_POST))) return true;
 		if($method=="get" && (!empty($_GET))) return true;
 		return false;
 	}
 	
 	function get_value($id) {
-		return $this->get_value_{$this->method}($id);
+		$method = "get_value_".$this->method;
+		return $this->$method($id);
+		
 	}
 	
 	function get_value_post($id) {
 		// use filter functions and validation
+		//var_dump($this->elements[$id]->validation);
+		if(!empty($this->elements[$id]->validation)) {
+			$validate = new Validation($id);
+			foreach($this->elements[$id]->validation as $method => $args) {
+				//for the case when method is passed in the array without arguments
+				if(is_numeric($method)) {
+					$method = $args;
+					$args = NULL;
+				}
+				$validate->$method($args);
+				
+				
+			}
+		}
+		
 	}
 	
 	function get_value_get($id) {

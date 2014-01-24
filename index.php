@@ -12,7 +12,7 @@ $name->set_validation(array('required'));
 $submit = $form->add_element("input", "submit", array("type"=>"submit"));
 
 
-if($form->submitted) {
+if($form->submitted_and_valid()) {
 	echo "Form was submitted\n";
 	var_dump($_POST);
 }
