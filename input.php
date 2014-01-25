@@ -8,7 +8,7 @@ class K_input extends Kelements {
 		$this->value = $value;
 	}
 	
-	function html() {
+	function html($display_errors = false) {
 		$out = "";
 		if($this->label_position == "before") 
 			$out .= empty($this->label)?"":$this->label;
@@ -18,13 +18,7 @@ class K_input extends Kelements {
 		if($this->label_position == "after") 
 			$out .= empty($this->label)?"":$this->label;
 		
-		if(count($this->error) > 0) {
-			$out .= "<ul class='errors'>";
-			foreach($this->error as $error) {
-				$out .= "<li>$error</li>";
-			}
-			$out .= "</ul>";
-		}
+		if($display_errors) $out .= $this->display_errors();
 		
 		return $out;
 	}

@@ -70,7 +70,7 @@ class Formkons {
 		
 		foreach($this->elements as $id => $element)
 		{
-			$out .= $element->html();
+			$out .= $element->html(true);
 		}
 		
 		$out .= "</form>";
@@ -122,7 +122,7 @@ class Formkons {
 				
 			}
 			$this->elements[$id]->error = $validate->error;
-			$this->errors = true;
+			if(!empty($validate->error)) $this->errors = true;
 			return $validate->value;
 		}
 		else {

@@ -71,5 +71,16 @@ class Kelements {
 		
 	}
 	
+	function display_errors() {
+		if(count($this->error) > 0) {
+			$out = "<ul class='errors'>";
+			foreach($this->error as $error) {
+				$out .= "<li>$error</li>";
+			}
+			$out .= "</ul>";
+		}
+		return $out;
+	}
+	
 }
 
