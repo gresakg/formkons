@@ -13,8 +13,11 @@ $submit = $form->add_element("input", "submit", array("type"=>"submit"));
 
 
 if($form->submitted_and_valid()) {
-	echo "Form was submitted\n";
-	var_dump($_POST);
+	echo "Form was submitted<br>\n";
+	echo "Name value is ". $name->value ."<br>\n";
+	echo "The array of all values: <br>";
+	var_dump($form->values_array());
+	
 }
 else {
 	

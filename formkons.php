@@ -65,6 +65,15 @@ class Formkons {
 		
 	}
 	
+	public function values_array() {
+		$result = array();
+		foreach($this->elements as $id => $element) {
+			$result[$id] = $element->value;
+		}
+		return $result;
+	}
+
+
 	public function html() {
 		$out = $this->form_open();
 		
