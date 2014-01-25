@@ -9,6 +9,7 @@ class Formkons {
 	var $method;
 	var $attributes = array();
 	var $elements;
+	var $errors = false;
 	private $submitted = false;
 	
 	function __construct($config=false) {
@@ -47,19 +48,16 @@ class Formkons {
 		
 		$this->elements[$id] = new $classname($id,$attr);
 		
-		// this will not work because validation is not yet defined
-		// we need a public method submitted() that will run this after the elements are defined
-		//if($this->submitted) 
-		//	$this->elements[$id]->value = $this->get_value($id);
-		
 		return $this->elements[$id];
 	}
 	
 	public function submitted_and_valid() {
 		if($this->submitted) {
 			foreach($this->elements as $id => $element) {
-				$this->get_value($id);
+				$this->elements[$id]->set_value($this->get_value($id));
 			}
+			
+			return !$this->errors;
 		}
 		else {
 			return false;
@@ -109,32 +107,29 @@ class Formkons {
 	}
 	
 	function get_value($id) {
-		$method = "get_value_".$this->method;
-		return $this->$method($id);
-		
-	}
-	
-	function get_value_post($id) {
 		// use filter functions and validation
 		//var_dump($this->elements[$id]->validation);
 		if(!empty($this->elements[$id]->validation)) {
-			$validate = new Validation($id);
+			$validate = new Validation($id, $this->method);
 			foreach($this->elements[$id]->validation as $method => $args) {
 				//for the case when method is passed in the array without arguments
 				if(is_numeric($method)) {
 					$method = $args;
 					$args = NULL;
 				}
+				
 				$validate->$method($args);
 				
-				
 			}
+			$this->elements[$id]->error = $validate->error;
+			$this->errors = true;
+			return $validate->value;
+		}
+		else {
+			return $_POST[$id];
 		}
 		
 	}
 	
-	function get_value_get($id) {
-		
-	}
 }
 

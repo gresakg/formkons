@@ -29,6 +29,12 @@ class Kelements {
 		$this->attributes[$name] = $value;
 	}
 	
+	function set_value($value) {
+		$this->value = $value;
+		// this method must be overriden because it must also set up the value in the form
+		// in case validation fails. This may differ from element to element 
+	}
+	
 	/**
 	 * Adds a label to the object
 	 * @param type $label

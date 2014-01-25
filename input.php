@@ -3,6 +3,11 @@
 class K_input extends Kelements {
 	
 		
+	function set_value($value, $preserve_in_form = true) {
+		if($preserve_in_form) $this->set_attribute("value", $value);
+		$this->value = $value;
+	}
+	
 	function html() {
 		$out = "";
 		if($this->label_position == "before") 
@@ -12,6 +17,15 @@ class K_input extends Kelements {
 		$out .= ">";
 		if($this->label_position == "after") 
 			$out .= empty($this->label)?"":$this->label;
+		
+		if(count($this->error) > 0) {
+			$out .= "<ul class='errors'>";
+			foreach($this->error as $error) {
+				$out .= "<li>$error</li>";
+			}
+			$out .= "</ul>";
+		}
+		
 		return $out;
 	}
 	

@@ -7,7 +7,7 @@ $form = new Formkons(array("method"=>"post"));
 
 $name = $form->add_element("input", "name", array("type"=>"text"));
 $name->set_label("Name");
-$name->set_validation(array('required'));
+$name->set_validation(array('required','fail'));
 
 $submit = $form->add_element("input", "submit", array("type"=>"submit"));
 
