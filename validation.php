@@ -22,6 +22,15 @@ class Validation {
 		if(empty($this->value)) $this->set_error('required');
 	}
 	
+	function restrict_to_options($options) {
+		if(is_array($options)) {
+			if(!in_array($this->value,$options)) $this->set_error('restrict_to_options');
+		}
+		else {
+			$this->set_error("options_not_set");
+		}
+	}
+	
 	/**
 	 * Dummy method that allways returns an error.
 	 * For debugging purposes.

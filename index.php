@@ -13,6 +13,7 @@ $choice = $form->add_element("input","choice",array("type"=>"checkbox","value"=>
 $choice->set_label("First choice", "after");
 $choice->add_option('second');
 $choice->set_label("Second choice", "after");
+$choice->set_validation(array('restrict_to_options'=> array('first','second')));
 
 $radiator = $form->add_element("input","radiator",array("type"=>"radio","value"=>"neo"));
 $radiator->set_label("Neo","after");
@@ -32,6 +33,6 @@ if($form->submitted_and_valid()) {
 }
 else {
 	
-	echo $form->html();
-	//include_once 'form_view.php';
+	//echo $form->html();
+	include_once 'form_view.php';
 }
