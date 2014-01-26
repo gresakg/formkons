@@ -58,7 +58,13 @@ class K_checkbox extends Kelements {
 			if($option['value'] === $value) {
 				$this->add_option_attributes($key, array("checked"=>"checked"));
 			}
+			else {
+				if($this->attributes['type'] == "radio" && $option['checked']=="checked") {
+					unset($this->options[$key]['checked']);
+				}
+			}
 		}
+		$this->value = $value;
 	}
 	
 }

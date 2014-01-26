@@ -14,6 +14,11 @@ $choice->set_label("First choice", "after");
 $choice->add_option('second');
 $choice->set_label("Second choice", "after");
 
+$radiator = $form->add_element("input","radiator",array("type"=>"radio","value"=>"neo"));
+$radiator->set_label("Neo","after");
+$radiator->add_option('trinity',array("checked"=>"checked"));
+$radiator->set_label('Trinity',"after");
+
 $submit = $form->add_element("input", "submit", array("type"=>"submit"));
 
 
@@ -21,6 +26,7 @@ if($form->submitted_and_valid()) {
 	echo "Form was submitted<br>\n";
 	echo "Name value is ". $name->value ."<br>\n";
 	echo "The array of all values: <br>";
+	echo "The winer is ". $radiator->value."<br>";
 	var_dump($form->values_array());
 	
 }
