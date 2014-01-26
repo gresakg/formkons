@@ -42,6 +42,7 @@ class Formkons {
 				if(empty($attr['type'])) $attr['type'] = "text";
 			}
 			else $attr = array( "type" => empty($attr)?"text":$attr);
+			if($attr['type'] == "checkbox") $element = "checkbox"; //checkboxes and radios need a separate class
 		}
 		
 		$classname = "K_".$element;

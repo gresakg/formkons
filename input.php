@@ -2,7 +2,7 @@
 
 class K_input extends Kelements {
 	
-		
+	
 	function set_value($value, $preserve_in_form = true) {
 		if($preserve_in_form) $this->set_attribute("value", $value);
 		$this->value = $value;

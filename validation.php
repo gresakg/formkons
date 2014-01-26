@@ -13,7 +13,7 @@ class Validation {
 	public function __construct($id, $method) {
 		$this->id = $id;
 		$this->type = constant("INPUT_".strtoupper($method));
-		$this->value = filter_input($type, $this->id);
+		$this->value = filter_input($this->type, $this->id);
 		include 'messages.php';
 		$this->msg = $msg;
 	}

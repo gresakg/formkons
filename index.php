@@ -9,6 +9,11 @@ $name = $form->add_element("input", "name", array("type"=>"text"));
 $name->set_label("Name");
 $name->set_validation(array('required'));
 
+$choice = $form->add_element("input","choice",array("type"=>"checkbox","value"=>"first"));
+$choice->set_label("First choice", "after");
+$choice->add_option('second');
+$choice->set_label("Second choice", "after");
+
 $submit = $form->add_element("input", "submit", array("type"=>"submit"));
 
 

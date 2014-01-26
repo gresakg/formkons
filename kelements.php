@@ -2,6 +2,7 @@
 
 include_once 'validation.php';
 include_once 'input.php';
+include_once 'checkbox.php';
 
 
 /**
@@ -72,6 +73,7 @@ class Kelements {
 	}
 	
 	function display_errors() {
+		$out = false;
 		if(count($this->error) > 0) {
 			$out = "<ul class='errors'>";
 			foreach($this->error as $error) {
