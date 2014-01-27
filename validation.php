@@ -9,11 +9,12 @@ class Validation {
 	var $type;
 	var $value;
 	var $error;
+	private $default_filters = array();
 	
 	public function __construct($id, $method) {
 		$this->id = $id;
 		$this->type = constant("INPUT_".strtoupper($method));
-		$this->value = filter_input($this->type, $this->id);
+		$this->value = $this->get_input($this->type, $this->id);
 		include 'messages.php';
 		$this->msg = $msg;
 	}
@@ -23,6 +24,7 @@ class Validation {
 	}
 	
 	function restrict_to_options($options) {
+		//var_dump($this->value);
 		if(is_array($options)) {
 			if(is_array($this->value)) {
 				if(empty($this->value)) $this->set_error('restrict_to_options');
@@ -37,6 +39,7 @@ class Validation {
 				if(!in_array($this->value,$options)) $this->set_error('restrict_to_options');
 			}
 		}
+		
 		else {
 			$this->set_error("options_not_set");
 		}
@@ -56,6 +59,48 @@ class Validation {
 		else $this->error[] = "Error message not found!";
 		
 	}
+	
+	/**
+	 * This method ows it's existance to the fact that php native function filter_input
+	 * does not work on array fields
+	 * @param string $type
+	 * @param string $name
+	 * @param array $filters
+	 * @return mixed  
+	 */
+	function get_input($type,$name,$filters=array()) {
+		$result = false;
+		switch($type) {
+			case "post":
+				if(isset($_POST[$name])) $result = $_POST[$name];
+				break;
+			case "get":
+				if(isset($_GET[$name])) $result = $_GET[$name];
+				break;
+			case "cookie":
+				if(isset($_COOKIE[$name])) $result = $_COOKIE[$name];
+				break;
+			case "server":
+				if(isset($_SERVER[$name])) $result = $_SERVER[$name];
+				break;
+			case "request":
+			default:
+				if(isset($_REQUEST[$name])) $result = $_REQUEST[$name];
+				break;
+		}
+		$filters = array_merge($this->default_filters,$filters);
+		if(!empty($filters)) {
+			if(is_array($result)) {
+				foreach($result as $key => $item) {
+					// TODO apply filters on each $item
+				}
+			}
+			else {
+				// TODO apply filters on $result
+			}
+		}
+		return $result;
+	} 
 	
 }
 

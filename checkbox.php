@@ -27,6 +27,11 @@ class K_checkbox extends Kelements {
 		}
 	}
 	
+	function remove_option_attribute($id,$name) {
+		if(isset($this->options[$id][$name]))
+			unset($this->options[$id][$name]);
+	}
+	
 	public function set_label($label,$position="before",$labeltags=true,$attr=false) {
 		$this->label_position = $position;
 		if($labeltags){
@@ -60,8 +65,8 @@ class K_checkbox extends Kelements {
 				$this->add_option_attributes($key, array("checked"=>"checked"));
 			}
 			else {
-				if($this->attributes['type'] == "radio" && $option['checked']=="checked") {
-					unset($this->options[$key]['checked']);
+				if($this->attributes['type'] == "radio") {
+					$this->remove_option_attribute($key,"checked");
 				}
 			}
 		}

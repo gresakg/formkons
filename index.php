@@ -19,6 +19,7 @@ $radiator = $form->add_element("input","radiator",array("type"=>"radio","value"=
 $radiator->set_label("Neo","after");
 $radiator->add_option('trinity',array("checked"=>"checked"));
 $radiator->set_label('Trinity',"after");
+//$radiator->set_validation(array('restrict_to_options'=> array('neo','trinity')));
 
 //$myfile = $form->add_element("input", "myfile",array("type"=>"file"));
 
