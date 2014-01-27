@@ -21,7 +21,7 @@ $radiator->add_option('trinity',array("checked"=>"checked"));
 $radiator->set_label('Trinity',"after");
 //$radiator->set_validation(array('restrict_to_options'=> array('neo','trinity')));
 
-//$myfile = $form->add_element("input", "myfile",array("type"=>"file"));
+$myfile = $form->add_element("input", "myfile",array("type"=>"file"));
 
 $submit = $form->add_element("input", "submit", array("type"=>"submit"));
 
@@ -32,6 +32,7 @@ if($form->submitted_and_valid()) {
 	echo "The array of all values: <br>";
 	echo "The winer is ". $radiator->value."<br>";
 	var_dump($form->values_array());
+	var_dump($_FILES);
 	
 }
 else {

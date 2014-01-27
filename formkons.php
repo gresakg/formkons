@@ -39,7 +39,10 @@ class Formkons {
 			}
 			else $attr = array( "type" => empty($attr)?"text":$attr);
 			if($attr['type'] == "checkbox" || $attr['type'] == "radio") $element = "checkbox";//checkboxes and radios need a separate class
-			if($attr['type'] == "file") $element = "upload";
+			if($attr['type'] == "file") { 
+				$element = "upload"; 
+				$this->add_attribute("enctype", "multipart/form-data");
+			}
 		}
 		
 		$classname = "K_".$element;
