@@ -16,6 +16,7 @@ class K_checkbox extends Kelements {
 	public function add_option($value, $attr=array()){
 		$this->i++;
 		if(!isset($attr['id'])) $attr['id'] = $this->attributes['name'].$this->i;
+		if($this->attributes['type'] == "checkbox") $attr['name'] = $this->attributes['name']."[".$this->i."]";
 		$attr['value'] = $value;
 		$this->options[$this->i] = array_merge($this->attributes,$attr);
 	}

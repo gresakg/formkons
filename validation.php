@@ -24,7 +24,18 @@ class Validation {
 	
 	function restrict_to_options($options) {
 		if(is_array($options)) {
-			if(!in_array($this->value,$options)) $this->set_error('restrict_to_options');
+			if(is_array($this->value)) {
+				if(empty($this->value)) $this->set_error('restrict_to_options');
+				foreach($this->value as $value) {
+					if(!in_array($value,$options)) { 
+						$this->set_error('restrict_to_options');
+						return;
+					}
+				}
+			}
+			else {
+				if(!in_array($this->value,$options)) $this->set_error('restrict_to_options');
+			}
 		}
 		else {
 			$this->set_error("options_not_set");

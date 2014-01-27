@@ -3,6 +3,7 @@
 include_once 'validation.php';
 include_once 'input.php';
 include_once 'checkbox.php';
+include_once 'upload.php';
 
 
 /**
@@ -26,14 +27,8 @@ class Kelements {
 
 	}
 	
-	function set_attribute($name,$value) {
+	public function set_attribute($name,$value) {
 		$this->attributes[$name] = $value;
-	}
-	
-	function set_value($value) {
-		$this->value = $value;
-		// this method must be overriden because it must also set up the value in the form
-		// in case validation fails. This may differ from element to element 
 	}
 	
 	/**
@@ -70,6 +65,18 @@ class Kelements {
 	 */
 	public function set_wrapper($tag, $attributes) {
 		
+	}
+	
+	function html($display_errors = false) {
+		$out = "Error! This method must be overriden by element extensions.";
+		
+		return $out;
+	}
+	
+	function set_value($value) {
+		$this->value = $value;
+		// this method must be overriden because it must also set up the value in the form
+		// in case validation fails. This may differ from element to element 
 	}
 	
 	function display_errors() {

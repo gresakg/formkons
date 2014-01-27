@@ -20,6 +20,8 @@ $radiator->set_label("Neo","after");
 $radiator->add_option('trinity',array("checked"=>"checked"));
 $radiator->set_label('Trinity',"after");
 
+//$myfile = $form->add_element("input", "myfile",array("type"=>"file"));
+
 $submit = $form->add_element("input", "submit", array("type"=>"submit"));
 
 
@@ -33,6 +35,6 @@ if($form->submitted_and_valid()) {
 }
 else {
 	
-	//echo $form->html();
-	include_once 'form_view.php';
+	echo $form->html();
+	//include_once 'form_view.php';
 }

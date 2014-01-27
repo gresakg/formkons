@@ -22,10 +22,6 @@ class Formkons {
 		
 	}
 		
-	function add_attribute($name, $value) {
-		$this->attributes[$name] = $value;
-	}
-	
 	/**
 	 * 
 	 * @param type $element
@@ -42,7 +38,8 @@ class Formkons {
 				if(empty($attr['type'])) $attr['type'] = "text";
 			}
 			else $attr = array( "type" => empty($attr)?"text":$attr);
-			if($attr['type'] == "checkbox" || $attr['type'] == "radio") $element = "checkbox"; //checkboxes and radios need a separate class
+			if($attr['type'] == "checkbox" || $attr['type'] == "radio") $element = "checkbox";//checkboxes and radios need a separate class
+			if($attr['type'] == "file") $element = "upload";
 		}
 		
 		$classname = "K_".$element;
@@ -51,6 +48,11 @@ class Formkons {
 		
 		return $this->elements[$id];
 	}
+	
+	public function add_attribute($name, $value) {
+		$this->attributes[$name] = $value;
+	}
+	
 	
 	public function submitted_and_valid() {
 		if($this->submitted) {
@@ -92,19 +94,19 @@ class Formkons {
 	/**
 	 * Create the opening FORM tag with all attributes
 	 */
-	function form_open() {
+	public function form_open() {
 		$out = "<form";
 		$out .= write_attributes($this->attributes);
 		$out .= ">";
 		return $out;
 	}
 	
-	function form_close() {
+	public function form_close() {
 		return "</form>";
 	}
 	
 	/**
-	 * This dunction is private and used by the constructor that needs(?) to know
+	 * This function is private and used by the constructor that needs(?) to know
 	 * if the form is submitted in advance. Do not mix with public function submitted()
 	 * that actually runs all the validation and value abstraction processes.
 	 * @param type $method
