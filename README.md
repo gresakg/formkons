@@ -76,7 +76,7 @@ echo $myform->html();
 
 And you've done it. It's conveinient for the developpement phase and eventually for some simple forms. However, if you want to have full controll exit from php (or introduce a view file).
  
-```
+```php
 
 <?php echo $myform->form_open(); ?>
 
