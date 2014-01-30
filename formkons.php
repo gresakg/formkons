@@ -60,6 +60,11 @@ class Formkons {
 	public function submitted_and_valid() {
 		if($this->submitted) {
 			foreach($this->elements as $id => $element) {
+				if($element->attributes['type'] == "file") {
+					$element->do_upload(); // FIXME first validation of the form, then the upload
+					// here could be the right place to define default upload validation methods
+					// think of how you want to use the class!
+				}
 				$this->elements[$id]->set_value($this->get_value($id));
 			}
 			
