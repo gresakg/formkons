@@ -51,12 +51,20 @@ class Formkons {
 		
 		return $this->elements[$id];
 	}
-	
+		
+	/**
+	 * Add a single attribute to the opening form tag
+	 * @param type $name
+	 * @param type $value
+	 */
 	public function add_attribute($name, $value) {
 		$this->attributes[$name] = $value;
 	}
 	
-	
+	/**
+	 * Checks if form is submitted and populates elements with values.
+	 * @return boolean
+	 */
 	public function submitted_and_valid() {
 		if($this->submitted) {
 			foreach($this->elements as $id => $element) {
@@ -76,6 +84,11 @@ class Formkons {
 		
 	}
 	
+	/**
+	 * Returns the array of all form values. Non declared values (values of elements 
+	 * not set by the formkons) are ignored.
+	 * @return type
+	 */
 	public function values_array() {
 		$result = array();
 		foreach($this->elements as $id => $element) {
@@ -84,7 +97,10 @@ class Formkons {
 		return $result;
 	}
 
-
+	/**
+	 * Convenience method for outputing the form with a one liner.
+	 * @return string
+	 */
 	public function html() {
 		$out = $this->form_open();
 		
@@ -100,7 +116,9 @@ class Formkons {
 	}
 	
 	/**
-	 * Create the opening FORM tag with all attributes
+	 * Create the opening FORM tag with all attributes.
+	 * You are required to use this function if you are outputing the form in a 
+	 * view (not using the above html() method)
 	 */
 	public function form_open() {
 		$out = "<form";
@@ -109,13 +127,17 @@ class Formkons {
 		return $out;
 	}
 	
+	/**
+	 * This is just to be consistent in your view files.
+	 * @return string
+	 */
 	public function form_close() {
 		return "</form>";
 	}
 	
 	/**
 	 * This function is private and used by the constructor that needs(?) to know
-	 * if the form is submitted in advance. Do not mix with public function submitted()
+	 * if the form is submitted in advance. Do not mix with public function submitted_and_valid()
 	 * that actually runs all the validation and value abstraction processes.
 	 * @param type $method
 	 * @return boolean
