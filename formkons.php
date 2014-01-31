@@ -10,6 +10,7 @@ class Formkons {
 	var $attributes = array();
 	var $elements;
 	var $errors = false;
+	var $global_wrapper = false;
 	private $submitted = false;
 	
 	function __construct($config=false) {
@@ -48,6 +49,9 @@ class Formkons {
 		$classname = "K_".$element;
 		
 		$this->elements[$id] = new $classname($id,$attr);
+		
+		if($this->global_wrapper !== false)
+			$this->elements[$id]->set_wrapper($this->global_wrapper['tag'], $this->global_wrapper['attr']);
 		
 		return $this->elements[$id];
 	}
@@ -133,6 +137,16 @@ class Formkons {
 	 */
 	public function form_close() {
 		return "</form>";
+	}
+	
+	/**
+	 * You can set a global wrapper tag for all elements. It's a convenience. Use 
+	 * with care!  
+	 * @param type $tag
+	 * @param type $attributes
+	 */
+	public function set_global_wrapper($tag,$attributes=array()) {
+		$this->global_wrapper = array('tag'=> $tag,'attr' => $attributes);
 	}
 	
 	/**

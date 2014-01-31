@@ -3,7 +3,7 @@
 include_once 'formkons.php';
 
 $form = new Formkons(array("method"=>"post"));
-
+$form->set_global_wrapper("p");
 
 $name = $form->add_element("input", "name", array("type"=>"text"));
 $name->set_label("Name");

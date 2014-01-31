@@ -142,7 +142,7 @@ class Kelements {
 	 * @param boolean $as_html
 	 * @return string
 	 */
-	function display_errors($as_html=false) {
+	public function display_errors($as_html=false) {
 		$out = false;
 		if(count($this->error) > 0) {		
 			foreach($this->error as $error) {
@@ -153,6 +153,18 @@ class Kelements {
 			if($html) $out = "<ul class='errors'>".$out."</ul>";
 		}
 		return $out;
+	}
+	
+	/**
+	 * Wrapps the string with wrap tags if they are set
+	 * @param type $string
+	 */
+	protected function wrapp($string) {
+		if(empty($this->owrapper)) 
+			return $string;
+		else
+			return $this->owrapper."\n".$string."\n".$this->cwrapper."\n";
+			
 	}
 	
 }

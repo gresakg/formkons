@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Transform an associative array into a string of valid html/xml name/value attribute
+ * pairs to be included in tags
+ * @param type $attributes
+ * @return string
+ */
 function write_attributes($attributes) {
 	$out = "";
 	if(is_array($attributes)) {
@@ -11,6 +17,13 @@ function write_attributes($attributes) {
 
 }
 
+/**
+ * Transform a string into lowercase ascii characters and numbers with spaces
+ * transformed into underscores.
+ * Handy for urls, filenames etc.
+ * @param type $str
+ * @return string
+ */
 function underscore($str) {
 
 	$str = deaccentuate(trim($str));
@@ -21,7 +34,11 @@ function underscore($str) {
 	
 }
 
-
+/**
+ * Transform accentuated characters to their non accentuated equivalents.
+ * @param type $str
+ * @return type
+ */
 function deaccentuate($str) {
 	$unwanted_array = array('Š'=>'S', 'š'=>'s', 'Ž'=>'Z', 'ž'=>'z', 'À'=>'A', 'Á'=>'A', 
 		'Â'=>'A', 'Ã'=>'A', 'Ä'=>'A', 'Å'=>'A', 'Æ'=>'A', 'Ç'=>'C', 'Č'=>'C', 'È'=>'E', 
