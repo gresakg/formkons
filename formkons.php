@@ -65,7 +65,7 @@ class Formkons {
 					// here could be the right place to define default upload validation methods
 					// think of how you want to use the class!
 				}
-				$this->elements[$id]->set_value($this->get_value($id));
+				$this->elements[$id]->set_value($this->elements[$id]->get_value($id));
 			}
 			
 			return !$this->errors;
@@ -124,31 +124,6 @@ class Formkons {
 		if($method=="post" && (!empty($_POST))) return true;
 		if($method=="get" && (!empty($_GET))) return true;
 		return false;
-	}
-	
-	function get_value($id) {
-		// use filter functions and validation
-		//var_dump($this->elements[$id]->validation);
-		if(!empty($this->elements[$id]->validation)) {
-			$validate = new Validation($id, $this->method);
-			foreach($this->elements[$id]->validation as $method => $args) {
-				//for the case when method is passed in the array without arguments
-				if(is_numeric($method)) {
-					$method = $args;
-					$args = NULL;
-				}
-				
-				$validate->$method($args);
-				
-			}
-			$this->elements[$id]->error = $validate->error;
-			if(!empty($validate->error)) $this->errors = true;
-			return $validate->value;
-		}
-		else {
-			return $_POST[$id];
-		}
-		
 	}
 	
 }

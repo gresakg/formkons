@@ -79,6 +79,31 @@ class Kelements {
 		// in case validation fails. This may differ from element to element 
 	}
 	
+	function get_value($id) {
+		// use filter functions and validation
+		//var_dump($this->elements[$id]->validation);
+		if(!empty($this->validation)) {
+			$validate = new Validation($id, $this->method);
+			foreach($this->validation as $method => $args) {
+				//for the case when method is passed in the array without arguments
+				if(is_numeric($method)) {
+					$method = $args;
+					$args = NULL;
+				}
+				
+				$validate->$method($args);
+				
+			}
+			$this->error = $validate->error;
+			if(!empty($validate->error)) $this->errors = true;
+			return $validate->value;
+		}
+		else {
+			return $_POST[$id];
+		}
+		
+	}
+	
 	function display_errors() {
 		$out = false;
 		if(count($this->error) > 0) {
