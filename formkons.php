@@ -66,28 +66,26 @@ class Formkons {
 	}
 	
 	/**
+	 * Global upload config. ??
+	 * @param type $config
+	 */
+	public function configure_upload($config) {
+		
+	}
+	
+	/**
 	 * Checks if form is submitted and populates elements with values.
 	 * @return boolean
 	 */
 	public function submitted_and_valid() {
 		if($this->submitted) {
 			foreach($this->elements as $id => $element) {
-				if($element->attributes['type'] == "file") {
-					//$element->do_upload(); // FIXME first validation of the form, then the upload
-					// here could be the right place to define default upload validation methods
-					// think of how you want to use the class!
-				}
-				$this->elements[$id]->set_value($this->elements[$id]->get_value($this->method));
-				if($this->elements[$id]->has_errors()) 
-					$this->errors = true;
-			}
-			
+				$element->set_value($element->get_value($this->method));
+				if($element->has_errors()) $this->errors = true;
+			}			
 			return !$this->errors;
 		}
-		else {
-			return false;
-		}
-		
+		else return false;		
 	}
 	
 	/**

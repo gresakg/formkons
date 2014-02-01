@@ -3,14 +3,77 @@
 class K_upload extends Kelements {
 	
 	var $upload_folder = "uploads";
-	var $max_file_size = 2000000;
+	
+	/**
+	 * Set to upload_max_filesize by the constructor if empty
+	 * @var type 
+	 */
+	var $max_file_size;
+	
+	/**
+	 * Overrides the empty default with validation methods required for file uploads.
+	 * @var array
+	 */
+	var $dvalidation = array(
+		
+	);
 	
 	public function __construct($name, $attributes) {
 		parent::__construct($name, $attributes);
 		$this->set_upload_folder($this->upload_folder);
+		if(empty($this->max_file_size)) {
+			$this->max_file_size = to_bytes(ini_get('upload_max_filesize'));
+		}
 	}
 	
-	function html($display_errors = false) {
+	/**
+	 * Checks if the upload folder exists and sets it
+	 * @param type $name
+	 */
+	public function set_upload_folder($name) {
+		if(is_dir($name)) {
+			if(is_writable($name)) {	
+				$this->upload_folder = $name;
+			}
+			else die("$name is not writable! Please change the permissions or the upload folder!");
+			
+		}
+		else {
+			die("$name does not exist!");
+		}
+	}
+	
+	/**
+	 * Check if the size required is lower than upload_max_filesize and sets it.
+	 * If it's greater or equal it sets it to upload_max_filesize
+	 * @param type $size
+	 */
+	public function set_max_file_size($size) {
+		$inilimit = to_bytes(ini_get('upload_max_filesize'));
+		if($size < $inilimit) $this->max_file_size = $size;
+		else $this->max_file_size =  $inilimit;
+	}
+	
+	/**
+	 * The upload element gets the value in it's own way
+	 * @param type $type this parameter is ignored
+	 */
+	public function get_value($type) {
+		if(isset($_FILES[$this->id])) {
+			var_dump($_FILES[$this->id]);
+		}
+		else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Output the input tag for the element. It will also add a label or wrapp the 
+	 * element if either label, wrapper or both are set.
+	 * @param type $display_errors
+	 * @return type
+	 */
+	public function html($display_errors = false) {
 		$out = "";
 		if($this->label_position == "before") 
 			$out .= empty($this->label)?"":$this->label;
@@ -25,34 +88,16 @@ class K_upload extends Kelements {
 		
 		if($display_errors) $out .= $this->display_errors();
 		
+		$out = $this->wrapp($out);
+		
 		return $out;
 	}
+
+	/**
+	 * Validation methods specifioc to the uload subclass
+	 */
 	
-	function do_upload() {
-		$raw_file = $_FILES[$this->attributes['name']]['tmp_name'];
-		$filename = $_FILES[$this->attributes['name']]['name'];
-		if(is_uploaded_file($raw_file)) {
-			if(!move_uploaded_file($raw_file, $this->upload_folder."/".$filename)) {
-				die("An error occured uploading file!");
-			}
-		}
-		else {
-			die("Error uploading file!");
-		}
-	}
 	
-	function set_upload_folder($name) {
-		if(is_dir($name)) {
-			$this->upload_folder = $name;
-		}
-		else {
-			die("$name does not exist!");
-		}
-	}
-	
-	function set_max_file_size($size) {
-		$this->max_file_size = $size;
-	}
 }
 
 

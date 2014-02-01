@@ -51,3 +51,27 @@ function deaccentuate($str) {
 		'û'=>'u', 'ý'=>'y', 'ý'=>'y', 'þ'=>'b', 'ÿ'=>'y' );
 	return strtr( $str, $unwanted_array );
 }
+
+/**
+ * Convert human readable string representation (like 2G, 5M) to bytes
+ * @param type $val
+ * @return int
+ */
+function to_bytes($val) {
+    $val = trim($val);
+    $last = strtolower($val[strlen($val)-1]);
+    switch($last) {
+		
+		case 't':
+            $val *= 1024;
+		case 'g':
+            $val *= 1024;
+		case 'm':
+            $val *= 1024;
+		case 'k':
+            $val *= 1024;        
+		
+    }
+
+    return $val;
+}
