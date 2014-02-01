@@ -60,9 +60,11 @@ class K_checkbox extends Kelements {
 	 * @param type $value
 	 * @param type $preserve_in_form
 	 */
-	public function set_value($value, $preserve_in_form = true) {
+	public function set_value($value, $preserve_in_form = true) {		
 		foreach($this->options as $key => $option) {
-			if($option['value'] === $value) {
+			if(is_array($value)) $v=$value[$key]; 
+			else $v=$value;
+			if($option['value'] === $v) {
 				$this->add_option_attributes($key, array("checked"=>"checked"));
 			}
 			else {

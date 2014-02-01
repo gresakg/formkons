@@ -13,7 +13,7 @@ $choice = $form->add_element("input","choice",array("type"=>"checkbox","value"=>
 $choice->set_label("First choice", "after");
 $choice->add_option('second');
 $choice->set_label("Second choice", "after");
-$choice->set_validation(array('restrict_to_options'=> array('first','second')));
+$choice->set_validation(array('restrict_to_options'=> array('options' =>array('first','second'),'strict'=>true)));
 
 $radiator = $form->add_element("input","radiator",array("type"=>"radio","value"=>"neo"));
 $radiator->set_label("Neo","after");
@@ -21,8 +21,8 @@ $radiator->add_option('trinity',array("checked"=>"checked"));
 $radiator->set_label('Trinity',"after");
 //$radiator->set_validation(array('restrict_to_options'=> array('neo','trinity')));
 
-$myfile = $form->add_element("input", "myfile",array("type"=>"file"));
-$myfile->set_label("Upload a file");
+//$myfile = $form->add_element("input", "myfile",array("type"=>"file"));
+//$myfile->set_label("Upload a file");
 
 $submit = $form->add_element("input", "submit", array("type"=>"submit"));
 

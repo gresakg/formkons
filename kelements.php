@@ -1,6 +1,5 @@
 <?php
 
-include_once 'validation.php';
 include_once 'input.php';
 include_once 'checkbox.php';
 include_once 'upload.php';
@@ -13,10 +12,12 @@ include_once 'upload.php';
  */
 class Kelements {
 	
+	var $id;
 	var $value = NULL;
 	var $attributes = array();
 	var $validation =array();
 	var $error = array();
+	var $msg;
 	var $html;
 	
 	var $label;
@@ -24,10 +25,15 @@ class Kelements {
 	var $owrapper;
 	var $cwrapper;
 	
+	var $default_filters = array();
+	
 	public function __construct($name,$attributes) {
 	
 		$this->attributes = $attributes;
 		$this->attributes['name'] = $name;
+		$this->id = $name;
+		include 'messages.php';
+		$this->msg = $msg;
 
 	}
 	
@@ -45,25 +51,31 @@ class Kelements {
 	 * @param type $id
 	 * @return type
 	 */
-	function get_value($id) {
+	function get_value($type) {
 		//var_dump($this->elements[$id]->validation);
+		$value = $this->get_input($type);
 		if(!empty($this->validation)) {
-			$validate = new Validation($id, $this->method);
 			foreach($this->validation as $method => $args) {
 				//for the case when method is passed in the array without arguments
 				if(is_numeric($method)) {
 					$method = $args;
 					$args = NULL;
 				}
-				$validate->$method($args);				
+				
+				if(is_callable($method)) {
+					if(is_array($args)) {
+						array_unshift($args,$value);
+						call_user_func_array($method, $args);
+					}
+					else {
+						$value = $method($value);
+					}
+				}
+				$value = $this->$method($value, $args);				
 			}
-			$this->error = $validate->error;
-			if(!empty($validate->error)) $this->errors = true;
-			return $validate->value;
 		}
-		else {
-			return $_POST[$id];
-		}
+		
+		return $value;
 		
 	}
 	
@@ -92,6 +104,71 @@ class Kelements {
 	 */
 	public function set_filters($methods) {
 		$this->set_validation($methods);
+	}
+	
+	/**
+	 * This method ows it's existance to the fact that php native function filter_input
+	 * does not work on array fields. It fetches the value and TODO applies native 
+	 * php filters on the value
+	 * @param string $type
+	 * @param string $name
+	 * @param array $filters
+	 * @return mixed  
+	 */
+	protected function get_input($type,$filters=array()) {
+		$result = false;
+		switch($type) {
+			case "post":
+				if(isset($_POST[$this->id])) $result = $_POST[$this->id];
+				break;
+			case "get":
+				if(isset($_GET[$this->id])) $result = $_GET[$this->id];
+				break;
+			case "cookie":
+				if(isset($_COOKIE[$this->id])) $result = $_COOKIE[$this->id];
+				break;
+			case "server":
+				if(isset($_SERVER[$this->id])) $result = $_SERVER[$this->id];
+				break;
+			case "request":
+			default:
+				if(isset($_REQUEST[$this->id])) $result = $_REQUEST[$this->id];
+				break;
+		}
+		$filters = array_merge($this->default_filters,$filters);
+		if(!empty($filters)) {
+			if(is_array($result)) {
+				foreach($result as $key => $item) {
+					// TODO apply filters on each $item
+				}
+			}
+			else {
+				// TODO apply filters on $result
+			}
+		}
+		return $result;
+	} 
+	
+	/**
+	 * Returns true if element object has (validation) errors
+	 * @return boolean
+	 */
+	public function has_errors() {
+		if(empty($this->error))
+			return false;
+		else 
+			return true;
+	}
+	
+	/**
+	 * Sets error messages
+	 * @param type $method
+	 * @param type $text
+	 */
+	protected function set_error($method, $text=false) {
+		if($text !== false) $this->error[] = $text;
+		if(isset($this->msg[$method])) $this->error[] = $this->msg[$method];
+		else $this->error[] = "Error message not found!";	
 	}
 	
 	/**
@@ -147,10 +224,10 @@ class Kelements {
 		if(count($this->error) > 0) {		
 			foreach($this->error as $error) {
 				$line = "$error\n";
-				if($html) $line = "<li>".$line."</li>";
+				if($as_html) $line = "<li>".$line."</li>";
 				$out .= $line;
 			}
-			if($html) $out = "<ul class='errors'>".$out."</ul>";
+			if($as_html) $out = "<ul class='errors'>".$out."</ul>";
 		}
 		return $out;
 	}
@@ -167,5 +244,77 @@ class Kelements {
 			
 	}
 	
+	/**
+	 * VALIDATION METHODS
+	 * Validation methods for an object are logically part of that object, so
+	 * no extra validation class is required.
+	 * 
+	 * Validation methods specific to certain elements may be defined in subclasses
+	 * for that elements.
+	 */
+	
+	/**
+	 * Sets error if $value is missing
+	 * @param type $value
+	 * @return type
+	 */
+	function required($value) {
+		if(empty($value)) 
+			$this->set_error('required');
+		return $value;
+	}
+	
+	/**
+	 * Returns error if $value is not one of the specified options
+	 * @param mixed $value
+	 * @param type $options
+	 * @param bool $strict if true empty will resolve to error
+	 * @return type
+	 */
+	function restrict_to_options($value, $args) {
+		
+		if(empty($args['strict'])) $args['strict'] = false;
+		extract($args);
+		
+		if(empty($value))
+			if($strict) {
+				$this->set_error('restrict_to_options');
+				return $value;
+			}
+			else { 
+				return $value;
+			}
+		if(is_array($options)) {
+			if(is_array($value)) {
+				foreach($value as $item) {
+					if(!in_array($item, $options)) { 
+						$this->set_error('restrict_to_options');
+						return $value;
+					}
+				}
+			}
+			else {
+				if(!in_array($value,$options)) { 
+					$this->set_error('restrict_to_options');
+					return $value;
+				}
+			}
+		}
+		
+		else {
+			$this->set_error("options_not_set");
+		}
+		
+		return $value;
+	}
+	
+	/**
+	 * Dummy method that allways returns an error.
+	 * For debugging purposes.
+	 */
+	function fail($value) {
+		$this->set_error('fail');
+		return $value;
+	}
 }
 
