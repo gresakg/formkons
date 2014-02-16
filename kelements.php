@@ -54,27 +54,7 @@ class Kelements {
 	function get_value($type) {
 		//var_dump($this->elements[$id]->validation);
 		$value = $this->get_input($type);
-		if(!empty($this->validation)) {
-			foreach($this->validation as $method => $args) {
-				//for the case when method is passed in the array without arguments
-				if(is_numeric($method)) {
-					$method = $args;
-					$args = NULL;
-				}
-				
-				if(is_callable($method)) {
-					if(is_array($args)) {
-						array_unshift($args,$value);
-						call_user_func_array($method, $args);
-					}
-					else {
-						$value = $method($value);
-					}
-				}
-				$value = $this->$method($value, $args);				
-			}
-		}
-		
+		$value = $this->run_validation($value);	
 		return $value;
 		
 	}
@@ -104,6 +84,36 @@ class Kelements {
 	 */
 	public function set_filters($methods) {
 		$this->set_validation($methods);
+	}
+	
+	/**
+	 * Iterates through the validation array and applies all the validation methods
+	 * to value
+	 * @param mixed $value raw value
+	 * @return mixed validated value
+	 */
+	protected function run_validation($value) {
+		if(!empty($this->validation)) {
+			foreach($this->validation as $method => $args) {
+				//for the case when method is passed in the array without arguments
+				if(is_numeric($method)) {
+					$method = $args;
+					$args = NULL;
+				}
+				
+				if(is_callable($method)) {
+					if(is_array($args)) {
+						array_unshift($args,$value);
+						call_user_func_array($method, $args);
+					}
+					else {
+						$value = $method($value);
+					}
+				}
+				$value = $this->$method($value, $args);				
+			}
+		}
+		return $value;
 	}
 	
 	/**

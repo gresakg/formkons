@@ -1,5 +1,7 @@
 <?php
 
+include_once 'class.upload.php';
+
 class K_upload extends Kelements {
 	
 	var $upload_folder = "uploads";
@@ -10,13 +12,7 @@ class K_upload extends Kelements {
 	 */
 	var $max_file_size;
 	
-	/**
-	 * Overrides the empty default with validation methods required for file uploads.
-	 * @var array
-	 */
-	var $dvalidation = array(
-		
-	);
+	var $allowed_filetypes = array('jpg','png','jpeg','gif','svg','doc','odf','pdf','mp3');
 	
 	public function __construct($name, $attributes) {
 		parent::__construct($name, $attributes);
@@ -59,12 +55,8 @@ class K_upload extends Kelements {
 	 * @param type $type this parameter is ignored
 	 */
 	public function get_value($type) {
-		if(isset($_FILES[$this->id])) {
-			var_dump($_FILES[$this->id]);
-		}
-		else {
-			return false;
-		}
+		$files = $this->get_files();
+		return $files;
 	}
 	
 	/**
@@ -91,6 +83,18 @@ class K_upload extends Kelements {
 		$out = $this->wrapp($out);
 		
 		return $out;
+	}
+	
+	private function get_files() {
+		if(empty($_FILES[$this->id])) return false;
+		$files = new upload($_FILES[$this->id]);
+		if($files->uploaded) {
+			return $files;
+		} 
+		else {
+			$this->error = $files->error;
+			return false;
+		}
 	}
 
 	/**

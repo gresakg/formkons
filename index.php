@@ -34,7 +34,7 @@ if($form->submitted_and_valid()) {
 	echo "The winer is ". $radiator->value."<br>";
 	var_dump($form->values_array());
 	echo "<br><br>";
-	var_dump($_FILES);
+	var_dump($myfile->value);
 	
 }
 else {
